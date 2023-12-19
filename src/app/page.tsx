@@ -30,7 +30,7 @@ export default function Home() {
       prompt: prompt,
     };
 
-    fetch("192.168.0.135:4000/google-gen-ai", {
+    fetch(process.env.BACKEND_URL + ":4000/google-gen-ai", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
