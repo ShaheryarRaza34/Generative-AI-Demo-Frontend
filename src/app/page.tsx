@@ -14,6 +14,7 @@ import ChatIcon from "@mui/icons-material/Chat";
 import SendIcon from "@mui/icons-material/Send";
 
 import styles from "./page.module.css";
+import { BACKEND_URL } from "@/configs/app";
 
 export default function Home() {
   const [prompt, setPrompt] = useState("");
@@ -30,7 +31,7 @@ export default function Home() {
       prompt: prompt,
     };
 
-    fetch(process.env.BACKEND_URL + ":4000/google-gen-ai", {
+    fetch(BACKEND_URL + "/google-gen-ai", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -38,7 +39,10 @@ export default function Home() {
       body: JSON.stringify(requestBody),
     })
       .then((res) => res.json())
-      .then((data) => setResponse(data.result))
+      .then((data) => {
+        console.log(process.env.BACKEND_URL);
+        setResponse(data.result);
+      })
       .catch((error) => {
         console.error("Error querying API: ", error);
         alert("Sorry, there was an issue with your request. Please try again.");
