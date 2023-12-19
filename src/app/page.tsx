@@ -30,7 +30,7 @@ export default function Home() {
       prompt: prompt,
     };
 
-    fetch("http://localhost:4000/google-gen-ai", {
+    fetch("192.168.0.135:4000/google-gen-ai", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
