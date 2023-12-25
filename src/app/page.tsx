@@ -4,6 +4,7 @@ import { useState } from "react";
 import {
   Box,
   Button,
+  CardHeader,
   Divider,
   InputAdornment,
   Paper,
@@ -18,7 +19,8 @@ import { BACKEND_URL } from "@/configs/app";
 
 export default function Home() {
   const [prompt, setPrompt] = useState("");
-  const [response, setResponse] = useState("");
+  const [geminiResponse, setGeminiResponse] = useState("");
+  const [openAiResponse, setOpenAIResponse] = useState("");
 
   const handleChange = (e: any) => {
     setPrompt(e.target.value);
@@ -31,7 +33,7 @@ export default function Home() {
       prompt: prompt,
     };
 
-    fetch(BACKEND_URL + "/google-gen-ai", {
+    fetch(BACKEND_URL + "/gen-ai/gemini", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -41,7 +43,23 @@ export default function Home() {
       .then((res) => res.json())
       .then((data) => {
         console.log(process.env.BACKEND_URL);
-        setResponse(data.result);
+        setGeminiResponse(data.result);
+      })
+      .catch((error) => {
+        console.error("Error querying API: ", error);
+        alert("Sorry, there was an issue with your request. Please try again.");
+      });
+
+    fetch(BACKEND_URL + "/gen-ai/open-ai", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(requestBody),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        setOpenAIResponse(data.result);
       })
       .catch((error) => {
         console.error("Error querying API: ", error);
@@ -97,10 +115,19 @@ export default function Home() {
           </Box>
         </form>
 
-        {response && (
+        {geminiResponse && (
           <>
             <Divider sx={{ margin: "2rem 0" }} />
-            <Typography>{response}</Typography>
+            <CardHeader title="GEMINI"></CardHeader>
+            <Typography>{geminiResponse}</Typography>
+          </>
+        )}
+
+        {openAiResponse && (
+          <>
+            <Divider sx={{ margin: "2rem 0" }} />
+            <CardHeader title="OPEN AI"></CardHeader>
+            <Typography>{openAiResponse}</Typography>
           </>
         )}
       </Paper>
